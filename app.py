@@ -1,21 +1,22 @@
 from flask import Flask, request, render_template
 
-app = Flask(__name__)
+app = Flask(name)
 
-@app.route('/')
-def registration_form():
-    return render_template('index.html')
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
 
-@app.route('/register', methods=['POST'])
-def register_user():
-    username = request.form['username']
-    password = request.form['password']
-    email = request.form['email']
+        # Логика обработки обратной связи
+        # Например, сохранение в базу данных или отправка по email
+        print(f"Новое сообщение от {name} ({email}): {message}")
 
-    with open('users.txt', 'a') as file:
-        file.write(f'{username},{password},{email}\n')
+        return f"Спасибо за ваше сообщение, {name}!"
 
-    return f'<h1>Пользователь {username} успешно зарегистрирован!</h1>'
+    # Отображение формы для метода GET
+    return render_template('feedback.html')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if name == 'main':
+    app.run(debug=True)
